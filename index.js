@@ -60,24 +60,70 @@ app.get('/tasks/:id', (req, res) => {
 });
 
 // STAGE 3
-  app.post('/tasks', (req,res) => {
-    const { title } = req.body;
-    if( !title || title.trim() === ""){
-      return res.status(400).json({error: "Title is required"});
-    }
+app.post('/tasks', (req,res) => {
+  const { title } = req.body;
+  if( !title || title.trim() === ""){
+    return res.status(400).json({error: "Title is required"});
+  }
 
-    const newTaskId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
+  const newTaskId = tasks.length > 0 ? Math.max(...tasks.map(t => t.id)) + 1 : 1;
 
-    const newTask = {
-      id: newTaskId,
-      title: title,
-      done: false
-    };
+  const newTask = {
+    id: newTaskId,
+    title: title,
+    done: false
+  };
 
-    tasks.push(newTask);
+  tasks.push(newTask);
 
-    res.status(201).json(newTask);
-  });
+  res.status(201).json(newTask);
+});
+
+
+// Stage 4 (edit)
+app.put('/tasks/:id', (req, res) => {
+  const taskId = parseInt(req.params.id);
+
+  // 1. Procurar a tarefa
+  const task = tasks.find(t => t.id === taskId);
+
+  // 2. Se não existir, erro 404
+  if (!task) {
+    return res.status(404).json({ error: "No task found" });
+  }
+
+  // 3. Tirar os dados novos que vieram do cliente
+  const { title, done } = req.body;
+
+  // 4. Se o título estiver vazio, erro 400
+  if (!title) {
+    return res.status(400).json({ error: "Title is required" });
+  }
+
+  // 5. Atualizar diretamente a tarefa com os novos dados
+  task.title = title;
+  task.done = done;
+
+  // 6. Devolver a tarefa atualizada com o status 200 (OK)
+  res.status(200).json(task);
+});
+
+// Stage 4 (delete)
+app.delete('/tasks/:id', (req, res) => {
+  const taskId = parseInt(req.params.id);
+
+  const task = tasks.find(t => t.id === taskId);
+
+  if (!task) {
+    return res.status(404).json({ error: "No task found" });
+  }
+
+  tasks = tasks.filter(t => t.id !== taskId);
+
+  res.status(204).send()
+});
+
+
 
 // Start the server and listen on the specified port
 app.listen(PORT, () => {
