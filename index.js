@@ -1,11 +1,16 @@
 // Import the Express library
 const express = require('express');
-
 // Initialize the Express application
 const app = express();
 
+const swaggerUi = require('swagger-ui-express');
+const fs = require('fs');
+
+const swaggerDocument = JSON.parse(fs.readFileSync('./openapi.json', 'utf8'));
+
 // Define the port where the server will listen for requests
 const PORT = 3000;
+
 
 app.use(express.json());
 
@@ -124,6 +129,7 @@ app.delete('/tasks/:id', (req, res) => {
 });
 
 
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Start the server and listen on the specified port
 app.listen(PORT, () => {
