@@ -10,6 +10,13 @@ const PORT = 3000;
 app.use(express.json());
 
 
+// STAGE 2: In-memory array of tasks (our temporary database)
+let tasks = [
+  { id: 1, title: "Learn Express basics", done: true },
+  { id: 2, title: "Build Stage 2 of CRUD API", done: false },
+  { id: 3, title: "Practice git commits", done: false }
+];
+
 // STAGE 1: Root endpoint returning API metadata in JSON format
 // Instead of plain text, we now return a structured JSON object describing our API
 app.get('/', (req, res) => {
@@ -26,6 +33,30 @@ app.get('/health', (req, res) => {
   res.json({
     status: "ok"
   });
+});
+
+// STAGE 2: GET /tasks - Retrieve the list of all tasks
+app.get('/tasks', (req, res) => {
+  res.json(tasks);
+});
+
+// STAGE 2: GET /tasks/:id - Retrieve a single task by its dynamic ID parameter
+app.get('/tasks/:id', (req, res) => {
+  // Extract the ID from the URL parameter and parse it into an integer
+  const taskId = parseInt(req.params.id);
+  
+  // Search for the task with the matching ID
+  const task = tasks.find(t => t.id === taskId);
+  
+  // If the task does not exist, return a 404 Status Code and error JSON
+  if (!task) {
+    return res.status(404).json({
+      error: `Task ${taskId} not found`
+    });
+  }
+  
+  // If found, return the task object with the default 200 Status Code
+  res.json(task);
 });
 
 // Start the server and listen on the specified port
