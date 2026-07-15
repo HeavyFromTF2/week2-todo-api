@@ -72,7 +72,7 @@ By changing the prompt to specify the exact port, endpoint paths (/tasks instead
 
 ## Conclusion
 
-This assignment was aa good way hands dirty with Node.js, Express, and Swagger, even with a lot of struggles... 
+This assignment was a good way to get my hands dirty with Node.js, Express, and Swagger, even with a lot of struggles... 
 
 Doing Stages 0 to 6 by hand with a bit of AI help allowed me to start understanding how routing, status codes, and manual validations work for the most part. When it came to Stage 7, I noticed how better the AI does it compared to what I've done.
 
